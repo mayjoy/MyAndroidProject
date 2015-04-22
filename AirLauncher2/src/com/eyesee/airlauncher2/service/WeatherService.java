@@ -155,13 +155,14 @@ public class WeatherService extends Service implements Constants{
 						String fc = info.getString("fc");//白天天气温度(摄氏度)
 						String fd = info.getString("fd");//晚上天气温度(摄氏度)
 						weatherInfo.area = c3;
+						Log.d("mark", "fa:"+fa+"fb:"+fb+"fc:"+fc+"fd:"+fd);
 						//因为白天已经过去,预报在晚上那次更新的时候白天的数据就会为空
-						if(fc != null && fc!="") {
-							weatherInfo.weatherText = WeatherUtils.decodeWeatherId(fa);
-							weatherInfo.temp = fd+"℃~"+fc+"℃";
-						}else {
+						if(fa.equals("")) {
 							weatherInfo.weatherText = WeatherUtils.decodeWeatherId(fb);
 							weatherInfo.temp = fd+"℃";
+						}else {
+							weatherInfo.weatherText = WeatherUtils.decodeWeatherId(fa);
+							weatherInfo.temp = fd+"℃~"+fc+"℃";
 						}
 						
 						//发送广播
