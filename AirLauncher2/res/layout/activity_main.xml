@@ -96,7 +96,7 @@
             android:layout_marginLeft="25dp"
             />
         <!-- 功能列表 -->
-        <HorizontalScrollView 
+        <com.eyesee.airlauncher2.view.ObservableHorizontalScrollView 
             android:id="@+id/hsv_app"
             android:layout_width="518dp"
             android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
                     android:layout_marginLeft="6dp"
                     />
             </LinearLayout>
-        </HorizontalScrollView>
+        </com.eyesee.airlauncher2.view.ObservableHorizontalScrollView>
         <!-- 右提示箭头 -->
         <ImageButton
             android:id="@+id/ib_right"
