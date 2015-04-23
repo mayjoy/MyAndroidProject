@@ -1,0 +1,107 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" 
+    android:background="@drawable/bg"
+    android:orientation="vertical"
+    >
+    <!-- 标题栏 -->
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0"
+	    android:background="@drawable/title"
+	    >
+	    <!-- 标题 -->
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="@color/white"
+	        android:textSize="@dimen/title_size"
+	        android:text="@string/sys_update"
+	        android:layout_centerInParent="true"
+	        />
+	    <!-- 返回键 -->
+	    <ImageButton
+	        android:id="@+id/ib_back"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/ib_back_selector"
+	        android:layout_marginTop="10dp"
+	        />
+	</RelativeLayout>
+    <!-- 更新内容 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+        >
+	    <!-- 文本可以滚动 -->
+        <ScrollView 
+            android:layout_width="@dimen/matrix_width"
+            android:layout_height="@dimen/matrix_height"
+            android:background="@drawable/update_content_bg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            >
+            <TextView 
+                android:id="@+id/tv_update_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/update_content_size"
+                android:text="@string/test_update_content"
+                />
+        </ScrollView>
+    </RelativeLayout>
+    
+    <!-- 更新进度条以及按钮 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        >
+        <!-- 版本号文字 -->
+        <TextView
+            android:id="@+id/tv_version" 
+            android:layout_width="@dimen/matrix_width"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/version_text_size"
+            android:text="@string/test_version"
+            android:background="@drawable/update_version_bg"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            />
+        <!-- 进度条 -->
+        <ProgressBar 
+            android:id="@+id/pb_download"
+            android:layout_width="@dimen/matrix_width"
+            android:layout_height="10dp"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_alignBottom="@+id/tv_version"
+            android:layout_centerHorizontal="true"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/pb_progress_drawable"
+            />
+        <!-- 更新按钮 -->
+        <TextView 
+            android:id="@+id/tv_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_selector"
+            android:clickable="true"
+            android:layout_below="@+id/pb_download"
+            android:layout_centerHorizontal="true"
+            android:text="@string/check_update"
+            android:textColor="@color/white"
+            android:textSize="@dimen/button_text_size"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            />
+    </RelativeLayout>
+    
+</LinearLayout>

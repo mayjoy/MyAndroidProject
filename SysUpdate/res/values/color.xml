@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffff</color>
+    
+    <drawable name="transparent_background">#00000000</drawable>
+    <drawable name="progress_bar">#808DE9FD</drawable>
+</resources>

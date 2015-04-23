@@ -3,7 +3,7 @@
     package="com.eyesee.airlauncher2"
     android:versionCode="1"
     android:versionName="1.0"
-
+ 
      >
 
     <!-- 这个权限用于进行网络定位-->
