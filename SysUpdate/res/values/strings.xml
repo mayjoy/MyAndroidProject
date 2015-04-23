@@ -8,6 +8,9 @@
     <string name="sys_update">系统升级</string>
     <string name="test_update_content">系统升级内容</string>
 
-    <string name="test_version">当前系统版本:0.1</string>
+    <string name="test_version">当前系统版本:</string>
     <string name="check_update">检测更新</string>
+    
+    <string name="have_last_version">已经是最新版本</string>
+    
 </resources>

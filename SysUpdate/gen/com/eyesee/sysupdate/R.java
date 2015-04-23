@@ -63,6 +63,7 @@ public final class R {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int check_update=0x7f060006;
+        public static final int have_last_version=0x7f060007;
         public static final int hello_world=0x7f060002;
         public static final int sys_update=0x7f060003;
         public static final int test_update_content=0x7f060004;
