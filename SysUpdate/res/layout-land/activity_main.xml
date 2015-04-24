@@ -83,7 +83,7 @@
             android:layout_alignBottom="@+id/tv_version"
             android:layout_centerHorizontal="true"
             android:max="100"
-            android:progress="50"
+            android:progress="0"
             android:progressDrawable="@drawable/pb_progress_drawable"
             />
         <!-- 更新按钮 -->
