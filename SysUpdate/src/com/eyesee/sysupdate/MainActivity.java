@@ -1,14 +1,13 @@
 package com.eyesee.sysupdate;
 
-import java.io.File;
 import java.io.StringReader;
+import java.util.Locale;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
@@ -21,9 +20,7 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,9 +48,6 @@ public class MainActivity extends Activity {
 	
 	@ViewInject(R.id.tv_update_content)
 	private TextView tv_update_content;
-	
-	@ViewInject(R.id.pb_download)
-	private ProgressBar pb_download;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +101,6 @@ public class MainActivity extends Activity {
 							case XmlPullParser.START_TAG:
 								if("url".equals(parser.getName())){
 									downLoadUrl = parser.nextText();
-									tv_button.setText(R.string.download_update);
 								}else if("md5".equals(parser.getName())){
 									md5 = parser.nextText();
 								}else if("description".equals(parser.getName())){
@@ -120,48 +113,6 @@ public class MainActivity extends Activity {
 							}
 							eventType=parser.next();//进入下一个事件处理
 						}
-						
-						//设置点击下载监听器
-						tv_button.setOnClickListener(new OnClickListener() {
-							
-							private HttpHandler handler;
-
-							@Override
-							public void onClick(View v) {
-								Log.d("mark", "dowload:url:"+downLoadUrl);
-								handler = http.download(downLoadUrl, "mnt/sdcard/update.zip",true,true,new RequestCallBack<File>() {
-											
-										@Override
-								        public void onStart() {
-											
-								        }
-
-								        @Override
-								        public void onLoading(long total, long current, boolean isUploading) {
-								        	pb_download.setMax((int) total);
-								        	pb_download.setProgress((int)current);
-								        	tv_button.setText(R.string.cancle);
-								        	tv_button.setOnClickListener(new OnClickListener() {
-												
-												@Override
-												public void onClick(View v) {
-													handler.cancel();
-												}
-											});
-								        }
-
-								        @Override
-								        public void onSuccess(ResponseInfo<File> responseInfo) {
-								        	tv_button.setText(R.string.install_update);
-								        }
-
-								        @Override
-								        public void onFailure(HttpException error, String msg) {
-								        	tv_button.setText(R.string.fail_download);
-								        }
-								});
-							}
-						});
 						
 					} catch (Exception e) {
 						e.printStackTrace();
