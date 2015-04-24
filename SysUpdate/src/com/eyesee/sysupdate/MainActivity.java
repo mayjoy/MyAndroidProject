@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
 	private String downLoadUrl;
 	private String md5;
 	private String language;
+	private DownLoadListener downLoadListener;
 	
 	HttpUtils http = new HttpUtils();
 	
@@ -55,6 +56,9 @@ public class MainActivity extends Activity {
 	@ViewInject(R.id.pb_download)
 	private ProgressBar pb_download;
 	
+	@SuppressWarnings("rawtypes")
+	private HttpHandler handler;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,6 +75,9 @@ public class MainActivity extends Activity {
 		switch (v.getId()) {
 		case R.id.ib_back:
 			finish();
+			if(handler != null){
+				handler.cancel();
+			}
 			break;
 		case R.id.tv_button:
 			checkUpdate();
@@ -105,10 +112,10 @@ public class MainActivity extends Activity {
 						while (eventType != XmlPullParser.END_DOCUMENT){
 							switch (eventType) {
 							case XmlPullParser.START_TAG:
-								if("url".equals(parser.getName())){
+								if("url".equals(parser.getName())){//获取url
 									downLoadUrl = parser.nextText();
 									tv_button.setText(R.string.download_update);
-								}else if("md5".equals(parser.getName())){
+								}else if("md5".equals(parser.getName())){//获取MD5
 									md5 = parser.nextText();
 								}else if("description".equals(parser.getName())){
 									if(language.equals(parser.getAttributeValue(1))){
@@ -121,48 +128,9 @@ public class MainActivity extends Activity {
 							eventType=parser.next();//进入下一个事件处理
 						}
 						
-						//设置点击下载监听器
-						tv_button.setOnClickListener(new OnClickListener() {
-							
-							private HttpHandler handler;
-
-							@Override
-							public void onClick(View v) {
-								Log.d("mark", "dowload:url:"+downLoadUrl);
-								handler = http.download(downLoadUrl, "mnt/sdcard/update.zip",true,true,new RequestCallBack<File>() {
-											
-										@Override
-								        public void onStart() {
-											
-								        }
-
-								        @Override
-								        public void onLoading(long total, long current, boolean isUploading) {
-								        	pb_download.setMax((int) total);
-								        	pb_download.setProgress((int)current);
-								        	tv_button.setText(R.string.cancle);
-								        	tv_button.setOnClickListener(new OnClickListener() {
-												
-												@Override
-												public void onClick(View v) {
-													handler.cancel();
-													
-												}
-											});
-								        }
-
-								        @Override
-								        public void onSuccess(ResponseInfo<File> responseInfo) {
-								        	tv_button.setText(R.string.install_update);
-								        }
-
-								        @Override
-								        public void onFailure(HttpException error, String msg) {
-								        	tv_button.setText(R.string.fail_download);
-								        }
-								});
-							}
-						});
+						//设置下载监听器
+						downLoadListener = new DownLoadListener();
+						tv_button.setOnClickListener(downLoadListener);
 						
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -171,5 +139,50 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * 下载监听器
+	 * @author mark
+	 */
+	private class DownLoadListener implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			Log.d("mark", "dowload:url:"+downLoadUrl);
+			handler = http.download(downLoadUrl, "mnt/sdcard/update.zip",true,true,new RequestCallBack<File>() {
+						
+					@Override
+			        public void onStart() {
+						
+			        }
+
+			        @Override
+			        public void onLoading(long total, long current, boolean isUploading) {
+			        	pb_download.setMax((int) total);
+			        	pb_download.setProgress((int)current);
+			        	tv_button.setText(R.string.cancle);
+			        	tv_button.setOnClickListener(new OnClickListener() {//点击暂停
+							
+							@Override
+							public void onClick(View v) {
+								handler.cancel();
+								tv_button.setText(R.string.continue_download);
+								tv_button.setOnClickListener(downLoadListener);//点击继续
+							}
+						});
+			        }
+
+			        @Override
+			        public void onSuccess(ResponseInfo<File> responseInfo) {
+			        	tv_button.setText(R.string.install_update);
+			        }
+
+			        @Override
+			        public void onFailure(HttpException error, String msg) {
+			        	tv_button.setText(R.string.fail_download);
+			        }
+			});
+		}
+	
 	}
 }

@@ -12,6 +12,7 @@
     <string name="download_update">下载更新</string>
     <string name="install_update">安装更新</string>
     <string name="fail_download">下载失败</string>
-    <string name="cancle">取消下载</string>
+    <string name="cancle">暂停下载</string>
+    <string name="continue_download">继续下载</string>
 
 </resources>
