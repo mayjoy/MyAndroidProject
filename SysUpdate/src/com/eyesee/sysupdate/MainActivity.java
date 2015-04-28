@@ -5,6 +5,7 @@ import java.io.StringReader;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import com.eyesee.sysupdate.OtaUpgradeUtils.ProgressListener;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -34,6 +35,8 @@ public class MainActivity extends Activity {
 	public static String GUID = "20150422150447";
 	public static String VERSION = "0.5";
 	public static String URL = "http://192.168.0.108:8080/controller/controller.shtml";
+	public static String DOWNLOADFILE_PATH = "mnt/sdcard/update.zip";
+	
 	private Context context = this;
 
 	private String downLoadUrl;
@@ -159,7 +162,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			Log.d("mark", "dowload:url:" + downLoadUrl);
-			httpHandler = http.download(downLoadUrl, "mnt/sdcard/update.zip",
+			httpHandler = http.download(downLoadUrl, DOWNLOADFILE_PATH,
 					true, true, new RequestCallBack<File>() {
 
 						@Override
@@ -194,7 +197,7 @@ public class MainActivity extends Activity {
 								@Override
 								public void run() {
 									super.run();
-									File file = new File("mnt/sdcard/update.zip");
+									File file = new File(DOWNLOADFILE_PATH);
 									String downloadFileMd5 = Md5Utils.getMd5ByFile(file);
 									Log.d("mark", "downloadFileMd5:"+downloadFileMd5+";md5:"+md5);
 									Message msg = Message.obtain();
@@ -231,7 +234,34 @@ public class MainActivity extends Activity {
 
 							@Override
 							public void onClick(View v) {
-
+								tv_button.setText(R.string.installing);
+								boolean b = OtaUpgradeUtils.copyFile(new File(DOWNLOADFILE_PATH), new File("/cache/update.zip"), new ProgressListener() {
+									
+									@Override
+									public void onVerifyFailed(int errorCode, Object object) {
+										
+									}
+									
+									@Override
+									public void onProgress(int progress) {
+										Log.d("mark", "进度:"+progress);
+									}
+									
+									@Override
+									public void onCopyProgress(int progress) {
+										Log.d("mark", "拷贝进度:"+progress);
+									}
+									
+									@Override
+									public void onCopyFailed(int errorCode, Object object) {
+										
+									}
+								});
+								
+								if(b){
+									OtaUpgradeUtils.installPackage(MainActivity.this, new File("/cache/update.zip"));
+								}
+								
 							}
 						});
 				break;
