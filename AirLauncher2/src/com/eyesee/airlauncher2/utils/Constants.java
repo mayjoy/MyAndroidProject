@@ -5,10 +5,10 @@ package com.eyesee.airlauncher2.utils;
  */
 public interface Constants {
 	
-	public static String LAUNCHER = "launcher";
-	public static String DEF_DISTRICT = "defdistrict";
-	public static String DEF_DISTRICT_VALUE = "深圳";
-	public static String WEATHER_URL = "http://open.weather.com.cn/data/";
+	public static final String LAUNCHER = "launcher";
+	public static final String DEF_DISTRICT = "defdistrict";
+	public static final String DEF_DISTRICT_VALUE = "深圳";
+	public static final String WEATHER_URL = "http://open.weather.com.cn/data/";
 	
-	public static String UPDATE_WEATHER = "updateWeather";
+	public static final String UPDATE_WEATHER = "updateWeather";
 }
