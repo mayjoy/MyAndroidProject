@@ -42,7 +42,6 @@ public class MainActivity extends Activity {
 	private String downLoadUrl;
 	private String md5;
 	private String language;
-	private DownLoadListener downLoadListener;
 
 	HttpUtils http = new HttpUtils();
 
@@ -70,7 +69,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		ViewUtils.inject(this);// 控件和事件注入
 		// 显示当前版本号
-		tv_version.setText(getResources().getString(R.string.test_version)
+		tv_version.setText(getString(R.string.test_version)
 				+ VERSION);
 		// 获取语言环境
 		language = getResources().getConfiguration().locale.getLanguage();
@@ -95,7 +94,7 @@ public class MainActivity extends Activity {
 	 * 检查更新
 	 */
 	private void checkUpdate() {
-
+		Log.d("mark", "检测升级");
 		http.send(HttpMethod.GET, URL + "?guid=" + GUID + "&firmware="
 				+ VERSION, new RequestCallBack<String>() {
 
@@ -109,8 +108,7 @@ public class MainActivity extends Activity {
 				String result = resoponse.result;
 				Log.d("mark", "访问成功:" + result);
 				if (result.contains("匹配失败")) {// 不需要更新
-					Toast.makeText(context, R.string.have_last_version,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, R.string.have_last_version,Toast.LENGTH_SHORT).show();
 				} else {// 更新
 
 					try {
@@ -123,15 +121,11 @@ public class MainActivity extends Activity {
 							case XmlPullParser.START_TAG:
 								if ("url".equals(parser.getName())) {// 获取url
 									downLoadUrl = parser.nextText();
-									tv_button.setText(R.string.download_update);
 								} else if ("md5".equals(parser.getName())) {// 获取MD5
 									md5 = parser.nextText();
-								} else if ("description".equals(parser
-										.getName())) {// 获取更新内容描述
-									if (language.equals(parser
-											.getAttributeValue(1))) {
-										tv_update_content.setText(parser
-												.nextText());
+								} else if ("description".equals(parser.getName())) {// 获取更新内容描述
+									if (language.equals(parser.getAttributeValue(1))) {
+										tv_update_content.setText(parser.nextText());
 									}
 								}
 								break;
@@ -140,10 +134,18 @@ public class MainActivity extends Activity {
 							eventType = parser.next();// 进入下一个事件处理
 						}
 
-						// 设置下载监听器
-						downLoadListener = new DownLoadListener();
-						tv_button.setOnClickListener(downLoadListener);
-
+						//检测本地是否有升级文件
+						File file = new File(DOWNLOADFILE_PATH);
+						if(file.exists()){//已经存在
+							Log.d("mark", "发现本地升级包");
+							Toast.makeText(context, getString(R.string.validate_local_file), Toast.LENGTH_SHORT).show();
+							checkMd5();
+						}else{
+							// 设置下载监听器
+							tv_button.setText(R.string.download_update);
+							tv_button.setOnClickListener(new DownLoadListener());
+						}
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 						Log.d("mark", "更新文档解析失败");
@@ -152,10 +154,33 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
+	
+	/**
+	 * 校验下载的文件的MD5
+	 */
+	private void checkMd5() {
+		// 单独开一个子线程去校验MD5
+		new Thread() {
+			@Override
+			public void run() {
+				super.run();
+				File file = new File(DOWNLOADFILE_PATH);
+				String downloadFileMd5 = Md5Utils.getMd5ByFile(file);
+				Log.d("mark", "downloadFileMd5:"+downloadFileMd5+";md5:"+md5);
+				Message msg = Message.obtain();
+				if (md5.equalsIgnoreCase(downloadFileMd5)) {
+					msg.what = 0;
+				} else {
+					msg.what = 1;
+				}
+				handler.sendMessage(msg);
+			}
+
+		}.start();
+	}
 
 	/**
-	 * 下载监听器
-	 * 
+	 * 点击下载监听器
 	 * @author mark
 	 */
 	private class DownLoadListener implements OnClickListener {
@@ -181,10 +206,8 @@ public class MainActivity extends Activity {
 										@Override
 										public void onClick(View v) {
 											httpHandler.cancel();
-											tv_button
-													.setText(R.string.continue_download);
-											tv_button
-													.setOnClickListener(downLoadListener);// 点击继续
+											tv_button.setText(R.string.continue_download);
+											tv_button.setOnClickListener(this);// 点击继续
 										}
 									});
 						}
@@ -192,24 +215,7 @@ public class MainActivity extends Activity {
 						@Override
 						public void onSuccess(ResponseInfo<File> responseInfo) {
 							tv_button.setText(R.string.validate);
-							// 单独开一个子线程去校验MD5
-							new Thread() {
-								@Override
-								public void run() {
-									super.run();
-									File file = new File(DOWNLOADFILE_PATH);
-									String downloadFileMd5 = Md5Utils.getMd5ByFile(file);
-									Log.d("mark", "downloadFileMd5:"+downloadFileMd5+";md5:"+md5);
-									Message msg = Message.obtain();
-									if (md5.equalsIgnoreCase(downloadFileMd5)) {
-										msg.what = 0;
-									} else {
-										msg.what = 1;
-									}
-									handler.sendMessage(msg);
-								}
-
-							}.start();
+							checkMd5();
 
 						}
 
@@ -221,56 +227,80 @@ public class MainActivity extends Activity {
 		}
 
 	}
-
+	
+	/**
+	 * 处理MD5校验结果
+	 */
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 0:// 数据校验成功
-				Log.d("mark", "下载数据校验成功");
+				Log.d("mark", "升级包校验成功");
 				tv_button.setText(R.string.install_update);
-				tv_button.setOnClickListener(new OnClickListener() {// 点击安装
-
-							@Override
-							public void onClick(View v) {
-								tv_button.setText(R.string.installing);
-								boolean b = OtaUpgradeUtils.copyFile(new File(DOWNLOADFILE_PATH), new File("/cache/update.zip"), new ProgressListener() {
-									
-									@Override
-									public void onVerifyFailed(int errorCode, Object object) {
-										
-									}
-									
-									@Override
-									public void onProgress(int progress) {
-										Log.d("mark", "进度:"+progress);
-									}
-									
-									@Override
-									public void onCopyProgress(int progress) {
-										Log.d("mark", "拷贝进度:"+progress);
-									}
-									
-									@Override
-									public void onCopyFailed(int errorCode, Object object) {
-										
-									}
-								});
-								
-								if(b){
-									OtaUpgradeUtils.installPackage(MainActivity.this, new File("/cache/update.zip"));
-								}
-								
-							}
-						});
+				tv_button.setOnClickListener(new InstallClickListener());
 				break;
 			case 1://数据校验失败
-				Log.d("mark", "下载数据校验失败");
+				Log.d("mark", "升级包校验失败");
 				tv_button.setText(R.string.validate_false);
+				//删除文件
+				File file = new File(DOWNLOADFILE_PATH);
+				if(file.delete()){
+					tv_button.setOnClickListener(new DownLoadListener());
+				};
 				break;
 			}
 		}
 
 	};
+	
+	/**
+	 * 点击安装的监听器
+	 * @author mark
+	 *
+	 */
+	private class InstallClickListener implements OnClickListener {// 点击安装
+
+		@Override
+		public void onClick(View v) {
+			
+			tv_button.setText(R.string.installing);
+			//开启子线程拷贝.
+			new Thread(){
+				@Override
+				public void run() {
+					boolean b = OtaUpgradeUtils.copyFile(new File(DOWNLOADFILE_PATH), new File("/cache/update.zip"), new ProgressListener() {
+						
+						@Override
+						public void onVerifyFailed(int errorCode, Object object) {
+							
+						}
+						
+						@Override
+						public void onProgress(int progress) {
+							Log.d("mark", "进度:"+progress);
+						}
+						
+						@Override
+						public void onCopyProgress(int progress) {
+							Log.d("mark", "拷贝进度:"+progress);
+						}
+						
+						@Override
+						public void onCopyFailed(int errorCode, Object object) {
+							Log.d("mark", "拷贝到系统分区失败");
+						}
+					});
+					
+					if(b){
+						OtaUpgradeUtils.installPackage(MainActivity.this, new File("/cache/update.zip"));
+					}
+				}
+				
+			}.start();
+			
+			
+		}
+	}
 }

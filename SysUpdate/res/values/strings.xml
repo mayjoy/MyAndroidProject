@@ -17,7 +17,7 @@
 
     <string name="validate">校验中</string>
     <string name="validate_false">校验失败</string>
-    <string name="validate_true">校验成功</string>
+    <string name="validate_local_file">发现本地升级包,正在校验中,请稍等</string>
     
     <string name="installing">正在安装</string>
     
