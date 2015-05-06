@@ -32,10 +32,11 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	public static String GUID = "20150422150447";
-	public static String VERSION = "0.5";
-	public static String URL = "http://192.168.0.108:8080/controller/controller.shtml";
-	public static String DOWNLOADFILE_PATH = "mnt/sdcard/update.zip";
+	public static final String GUID = "20150422150447";
+	public static final String VERSION = "0.5";
+	public static final String URL = "http://192.168.0.108:8080/controller/controller.shtml";
+	public static final String DOWNLOADFILE_PATH = "mnt/sdcard/update.zip";
+	public static final String CACHEFILE_PATH = "/cache/update.zip";
 	
 	private Context context = this;
 
@@ -244,7 +245,7 @@ public class MainActivity extends Activity {
 			case 1://数据校验失败
 				Log.d("mark", "升级包校验失败");
 				tv_button.setText(R.string.validate_false);
-				//删除文件
+				//删除文件,并重新设置下载监听器
 				File file = new File(DOWNLOADFILE_PATH);
 				if(file.delete()){
 					tv_button.setOnClickListener(new DownLoadListener());
@@ -258,7 +259,6 @@ public class MainActivity extends Activity {
 	/**
 	 * 点击安装的监听器
 	 * @author mark
-	 *
 	 */
 	private class InstallClickListener implements OnClickListener {// 点击安装
 
@@ -270,7 +270,7 @@ public class MainActivity extends Activity {
 			new Thread(){
 				@Override
 				public void run() {
-					boolean b = OtaUpgradeUtils.copyFile(new File(DOWNLOADFILE_PATH), new File("/cache/update.zip"), new ProgressListener() {
+					boolean b = OtaUpgradeUtils.copyFile(new File(DOWNLOADFILE_PATH), new File(CACHEFILE_PATH), new ProgressListener() {
 						
 						@Override
 						public void onVerifyFailed(int errorCode, Object object) {
@@ -285,6 +285,9 @@ public class MainActivity extends Activity {
 						@Override
 						public void onCopyProgress(int progress) {
 							Log.d("mark", "拷贝进度:"+progress);
+							//progressBar可以在子线程中更新
+							pb_download.setMax(100);
+							pb_download.setProgress(progress);
 						}
 						
 						@Override
@@ -294,7 +297,7 @@ public class MainActivity extends Activity {
 					});
 					
 					if(b){
-						OtaUpgradeUtils.installPackage(MainActivity.this, new File("/cache/update.zip"));
+						OtaUpgradeUtils.installPackage(MainActivity.this, new File(CACHEFILE_PATH));
 					}
 				}
 				
