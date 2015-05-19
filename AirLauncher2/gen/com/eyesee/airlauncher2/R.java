@@ -75,11 +75,12 @@ public final class R {
         public static final int music_prev=0x7f02002b;
         public static final int music_prev_d=0x7f02002c;
         public static final int music_prev_selector=0x7f02002d;
-        public static final int point=0x7f02002e;
-        public static final int random_mode=0x7f02002f;
-        public static final int right=0x7f020030;
-        public static final int time_bg=0x7f020031;
-        public static final int voice=0x7f020032;
+        public static final int point_no_selected=0x7f02002e;
+        public static final int point_selected=0x7f02002f;
+        public static final int random_mode=0x7f020030;
+        public static final int right=0x7f020031;
+        public static final int time_bg=0x7f020032;
+        public static final int voice=0x7f020033;
     }
     public static final class id {
         public static final int action_settings=0x7f09001e;

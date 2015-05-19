@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
+    android:gravity="center"
     >
     
     <GridView 
         android:id="@+id/gv_app"
         android:layout_width="600dp"
-        android:layout_height="wrap_content"
+        android:layout_height="230dp"
         android:numColumns="4"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"

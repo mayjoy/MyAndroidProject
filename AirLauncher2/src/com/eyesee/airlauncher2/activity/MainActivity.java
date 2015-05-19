@@ -200,6 +200,8 @@ public class MainActivity extends Activity implements Constants{
 			case R.id.ib_apps://点击所有程序
 				Intent intent = new Intent(MainActivity.this,AllAppActivity.class);
 				startActivity(intent);
+				//设置activity重新聚焦时的动画为渐入式
+				MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 			}
 		}
 		
