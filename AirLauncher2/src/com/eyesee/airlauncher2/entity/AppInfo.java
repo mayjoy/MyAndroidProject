@@ -19,4 +19,10 @@ public class AppInfo {
         intent.setComponent(className);
         intent.setFlags(launchFlags);
     }
+	@Override
+	public String toString() {
+		return "AppInfo [name=" + name + ", packageName="
+				+ packageName + ", isSystemApp=" + isSystemApp +  "]";
+	}
+
 }

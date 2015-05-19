@@ -19,6 +19,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -232,6 +233,7 @@ public class MainActivity extends Activity {
 	/**
 	 * 处理MD5校验结果
 	 */
+	 @SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {

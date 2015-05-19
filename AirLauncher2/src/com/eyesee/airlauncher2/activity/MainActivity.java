@@ -27,14 +27,18 @@ public class MainActivity extends Activity implements Constants{
 	private ObservableHorizontalScrollView hsv_app;
 	private ImageButton ib_left;
 	private ImageButton ib_right;
+	
 	private TextView tv_area;
 	private TextView tv_weather;
 	private TextView tv_temperature;
 	private TextView tv_date;
 	private TextView tv_time;
 	private TextView tv_week;
+	
 	private BroadcastReceiver timeReceiver;
 	private BroadcastReceiver weatherReceiver;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -124,8 +128,16 @@ public class MainActivity extends Activity implements Constants{
 		ClickListener l = new ClickListener();
 		ib_right.setOnClickListener(l);
 		ib_left.setOnClickListener(l);
+		ib_apps.setOnClickListener(l);
 	}
 	
+	private ImageButton ib_nav;
+	private ImageButton ib_recorder;
+	private ImageButton ib_files;
+	private ImageButton ib_phone;
+	private ImageButton ib_music;
+	private ImageButton ib_apps;
+	private ImageButton ib_set;
 	/**
 	 * 初始化
 	 * 1.获取页面控件
@@ -135,14 +147,23 @@ public class MainActivity extends Activity implements Constants{
 		hsv_app = (ObservableHorizontalScrollView) findViewById(R.id.hsv_app);
 		ib_left = (ImageButton) findViewById(R.id.ib_left);
 		ib_right = (ImageButton) findViewById(R.id.ib_right);
+		
 		tv_area = (TextView) findViewById(R.id.tv_area);
 		tv_weather = (TextView) findViewById(R.id.tv_weather);
 		tv_temperature = (TextView) findViewById(R.id.tv_temperature);
 		tv_date = (TextView) findViewById(R.id.tv_date);
 		tv_time = (TextView) findViewById(R.id.tv_time);
 		tv_week = (TextView) findViewById(R.id.tv_week);
-		ib_left.setVisibility(View.GONE);
 		
+		ib_nav = (ImageButton) findViewById(R.id.ib_nav);
+		ib_recorder = (ImageButton) findViewById(R.id.ib_recorder);
+		ib_files = (ImageButton) findViewById(R.id.ib_files);
+		ib_phone = (ImageButton) findViewById(R.id.ib_phone);
+		ib_music = (ImageButton) findViewById(R.id.ib_music);
+		ib_apps = (ImageButton) findViewById(R.id.ib_apps);
+		ib_set = (ImageButton) findViewById(R.id.ib_set);
+		
+		ib_left.setVisibility(View.GONE);
 	}
 	
 	/**
@@ -164,7 +185,6 @@ public class MainActivity extends Activity implements Constants{
 				}else if (scrollX>=524&&scrollX<786) {
 					hsv_app.smoothScrollTo(786, 0);
 				}
-
 				break;
 			case R.id.ib_left://左边点击箭头
 				scrollX = hsv_app.getScrollX();
@@ -176,6 +196,10 @@ public class MainActivity extends Activity implements Constants{
 					hsv_app.smoothScrollTo(0, 0);
 				}
 				break;
+				
+			case R.id.ib_apps://点击所有程序
+				Intent intent = new Intent(MainActivity.this,AllAppActivity.class);
+				startActivity(intent);
 			}
 		}
 		
