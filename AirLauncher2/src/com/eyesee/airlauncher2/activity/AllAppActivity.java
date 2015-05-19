@@ -67,6 +67,7 @@ public class AllAppActivity extends Activity {
 				finish();
 			}
 		});
+		
 	}
 
 	/**
@@ -84,8 +85,8 @@ public class AllAppActivity extends Activity {
 				.size() / APP_NUMBERS_PER_PAGE) + 1)
 				: (allApps.size() / APP_NUMBERS_PER_PAGE);
 
-		Log.d("mark", "页面个数" + pageCount);
-		Log.d("mark", allApps.toString());
+//		Log.d("mark", "页面个数" + pageCount);
+//		Log.d("mark", allApps.toString());
 
 		// 计算每页显示的APP
 		for (int i = 0; i < pageCount; i++) {
@@ -104,7 +105,9 @@ public class AllAppActivity extends Activity {
 					perPageApps.add(allApps.get(j));
 				}
 			}
-			Log.d("mark", perPageApps.toString());
+			
+//			Log.d("mark", perPageApps.toString());
+			
 			// 设置每页的gridView的适配器
 			gv_app.setAdapter(new GridViewAdapter(context, perPageApps));
 
@@ -120,8 +123,7 @@ public class AllAppActivity extends Activity {
 					if (intent != null) {
 						startActivity(intent);
 						// 设置打开activity的动画为渐入式
-						AllAppActivity.this
-								.overridePendingTransition(
+						AllAppActivity.this.overridePendingTransition(
 										android.R.anim.fade_in,
 										android.R.anim.fade_out);
 					}
@@ -164,12 +166,10 @@ public class AllAppActivity extends Activity {
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-
 			}
 		});
 	}
@@ -180,6 +180,7 @@ public class AllAppActivity extends Activity {
 		// 设置activity重新聚焦时的动画为渐入式
 		AllAppActivity.this.overridePendingTransition(android.R.anim.fade_in,
 				android.R.anim.fade_out);
+	
 	}
 
 }
