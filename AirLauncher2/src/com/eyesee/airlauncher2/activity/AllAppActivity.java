@@ -215,7 +215,6 @@ public class AllAppActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		unregisterReceiver(appChangedReceiver);
 	}
