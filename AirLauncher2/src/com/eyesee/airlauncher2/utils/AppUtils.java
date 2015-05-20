@@ -17,7 +17,7 @@ import android.content.pm.ResolveInfo;
  * 程序工具类
  * @author mark
  */
-public class AppUtils {
+public class AppUtils implements Constants {
 	
 	/**
 	 * 获取所有App
@@ -34,7 +34,7 @@ public class AppUtils {
 	        if (apps != null) {
 	            for (int i = 0; i < apps.size(); i++) {
 	            	ResolveInfo info = apps.get(i);
-	            	if (!info.activityInfo.packageName.equals("com.allwinner.launcher")) {
+	            	if (!info.activityInfo.packageName.equals(AIRLAUNCHER_PACKAGE_NAME)) {
 	            		AppInfo appInfo = new AppInfo();
 	            		appInfo.name = info.loadLabel(pm).toString();
 	            		appInfo.setActivity(new ComponentName(

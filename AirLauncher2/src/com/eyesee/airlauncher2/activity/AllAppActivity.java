@@ -3,8 +3,10 @@ package com.eyesee.airlauncher2.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,9 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.baidu.location.LLSInterface;
 import com.eyesee.airlauncher2.R;
 import com.eyesee.airlauncher2.adapter.GridViewAdapter;
 import com.eyesee.airlauncher2.adapter.MyViewPagerAdapter;
@@ -52,12 +52,13 @@ public class AllAppActivity extends Activity {
 	private ImageButton ib_back;
 	private LinearLayout ll_point;
 	private int lastPos;
+	private BroadcastReceiver appChangedReceiver;//应用程序改变监听器
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app);
-
+		findViewById();
 		init();
 
 		ib_back.setOnClickListener(new OnClickListener() {
@@ -68,16 +69,36 @@ public class AllAppActivity extends Activity {
 			}
 		});
 		
+		//应用程序改变监听器
+		appChangedReceiver = new BroadcastReceiver() {
+			
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String action = intent.getAction();
+				if("android.intent.action.PACKAGE_ADDED".equals(action) ||
+						"android.intent.action.PACKAGE_REMOVED".equals(action)){
+					Log.d("mark", "应用程序改变了");
+					//先清空之前的页面和小圆点,再重新设置
+					viewList.clear();
+					vp_app.removeAllViews();
+					ll_point.removeAllViews();
+					init();
+				}
+				
+			}
+		};
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.intent.action.PACKAGE_ADDED");
+		filter.addAction("android.intent.action.PACKAGE_REMOVED");
+		filter.addDataScheme("package");
+		registerReceiver(appChangedReceiver, filter);
+		
 	}
 
 	/**
-	 * 初始化 1.获取页面控件 2.获取所有程序 3.计算页面个数
+	 * 初始化 1.获取所有程序 2.计算页面个数 3.计算每个页面的程序并分配
 	 */
 	private void init() {
-		vp_app = (ViewPager) findViewById(R.id.vp_app);
-		ib_back = (ImageButton) findViewById(R.id.ib_back);
-		ll_point = (LinearLayout) findViewById(R.id.ll_point);
-
 		// 获取所有app
 		allApps = AppUtils.getAllApps(context);
 		// 计算页面个数
@@ -174,6 +195,15 @@ public class AllAppActivity extends Activity {
 		});
 	}
 
+	/**
+	 * 获取页面控件
+	 */
+	private void findViewById() {
+		vp_app = (ViewPager) findViewById(R.id.vp_app);
+		ib_back = (ImageButton) findViewById(R.id.ib_back);
+		ll_point = (LinearLayout) findViewById(R.id.ll_point);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -183,4 +213,11 @@ public class AllAppActivity extends Activity {
 	
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(appChangedReceiver);
+	}
+	
 }
