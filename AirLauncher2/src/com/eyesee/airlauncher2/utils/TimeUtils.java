@@ -15,7 +15,7 @@ public class TimeUtils {
 	 */
 	@SuppressLint("SimpleDateFormat")
 	public static String getTime() {
-		SimpleDateFormat timeFormat=new SimpleDateFormat("hh:mm");//时间格式
+		SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm");//时间格式
 		String time = timeFormat.format(new Date());
 		return time;
 	}

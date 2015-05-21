@@ -4,6 +4,7 @@ import com.eyesee.airlauncher2.R;
 import com.eyesee.airlauncher2.entity.WeatherInfo;
 import com.eyesee.airlauncher2.utils.Constants;
 import com.eyesee.airlauncher2.utils.TimeUtils;
+import com.eyesee.airlauncher2.utils.WeatherUtils;
 import com.eyesee.airlauncher2.view.HorizontalScrollViewListener;
 import com.eyesee.airlauncher2.view.ObservableHorizontalScrollView;
 
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -81,6 +83,7 @@ public class MainActivity extends Activity implements Constants{
 					tv_area.setText(weatherInfo.area);
 					tv_weather.setText(weatherInfo.weatherText);
 					tv_temperature.setText(weatherInfo.temp);
+					iv_weather.setImageResource(WeatherUtils.getWeatherImg(weatherInfo.weatherText));
 				}
 			}
 		};
@@ -95,7 +98,6 @@ public class MainActivity extends Activity implements Constants{
 		tv_date.setText(TimeUtils.getDate());
 		tv_week.setText(TimeUtils.getWeekDay());
 	}
-	
 	
 	@Override
 	protected void onResume() {
@@ -138,6 +140,7 @@ public class MainActivity extends Activity implements Constants{
 	private ImageButton ib_music;
 	private ImageButton ib_apps;
 	private ImageButton ib_set;
+	private ImageView iv_weather;
 	/**
 	 * 初始化
 	 * 1.获取页面控件
@@ -154,6 +157,7 @@ public class MainActivity extends Activity implements Constants{
 		tv_date = (TextView) findViewById(R.id.tv_date);
 		tv_time = (TextView) findViewById(R.id.tv_time);
 		tv_week = (TextView) findViewById(R.id.tv_week);
+		iv_weather = (ImageView) findViewById(R.id.iv_weather);
 		
 		ib_nav = (ImageButton) findViewById(R.id.ib_nav);
 		ib_recorder = (ImageButton) findViewById(R.id.ib_recorder);
@@ -175,6 +179,7 @@ public class MainActivity extends Activity implements Constants{
 
 		@Override
 		public void onClick(View v) {
+			
 			switch (v.getId()) {
 			case R.id.ib_right://右边点击箭头
 				scrollX = hsv_app.getScrollX();
@@ -186,6 +191,7 @@ public class MainActivity extends Activity implements Constants{
 					hsv_app.smoothScrollTo(786, 0);
 				}
 				break;
+				
 			case R.id.ib_left://左边点击箭头
 				scrollX = hsv_app.getScrollX();
 				if(scrollX>524){
@@ -198,6 +204,7 @@ public class MainActivity extends Activity implements Constants{
 				break;
 				
 			case R.id.ib_apps://点击所有程序
+				Log.d("mark", "点击了所有程序");
 				Intent intent = new Intent(MainActivity.this,AllAppActivity.class);
 				startActivity(intent);
 				//设置activity重新聚焦时的动画为渐入式

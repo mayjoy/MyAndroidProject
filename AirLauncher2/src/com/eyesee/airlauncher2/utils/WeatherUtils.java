@@ -1,4 +1,7 @@
 package com.eyesee.airlauncher2.utils;
+
+import com.eyesee.airlauncher2.R;
+
 /**
  * 天气工具类
  * @author mark
@@ -79,5 +82,81 @@ public class WeatherUtils {
 			return "无";
 		}
 		return "无";
+	}
+	
+	/**
+	 * 根据天气获取对应图片资源ID
+	 */
+	public static int getWeatherImg(String weatherText){
+		if("晴".equals(weatherText)){
+			return R.drawable.sunny;
+		}else if( "多云".equals(weatherText)){
+			return R.drawable.cloudy;
+		}else if("阴".equals(weatherText)){
+			return R.drawable.cloudy;
+		}else if("阵雨".equals(weatherText)){
+			return R.drawable.shower;
+		}else if("雷阵雨".equals(weatherText)){
+			return R.drawable.thunder_shower;
+		}else if("雷阵雨伴有冰雹".equals(weatherText)){
+			return R.drawable.thunder_shower;
+		}else if("雨夹雪".equals(weatherText)){
+			return R.drawable.light_snow;
+		}else if("小雨".equals(weatherText)){
+			return R.drawable.light_rain;
+		}else if("中雨".equals(weatherText)){
+			return R.drawable.moderate_rain;
+		}else if("大雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("暴雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("大暴雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("特大暴雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("阵雪".equals(weatherText)){
+			return R.drawable.light_snow;
+		}else if("小雪".equals(weatherText)){
+			return R.drawable.light_snow;
+		}else if("中雪".equals(weatherText)){
+			return R.drawable.light_snow;
+		}else if("大雪".equals(weatherText)){
+			return R.drawable.heavy_snow;
+		}else if("暴雪".equals(weatherText)){
+			return R.drawable.heavy_snow;
+		}else if("雾".equals(weatherText)){
+			return R.drawable.foggy;
+		}else if("冻雨".equals(weatherText)){
+			return R.drawable.light_rain;
+		}else if("沙尘暴".equals(weatherText)){
+			return R.drawable.duststorm;
+		}else if("小到中雨".equals(weatherText)){
+			return R.drawable.light_rain;
+		}else if("中到大雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("大到暴雨 ".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("暴雨到大暴雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("大暴雨到特大暴雨".equals(weatherText)){
+			return R.drawable.heavy_rain;
+		}else if("小到中雪".equals(weatherText)){
+			return R.drawable.light_snow;
+		}else if("中到大雪".equals(weatherText)){
+			return R.drawable.heavy_snow;
+		}else if("大到暴雪".equals(weatherText)){
+			return R.drawable.heavy_snow;
+		}else if("浮尘".equals(weatherText)){
+			return R.drawable.duststorm;
+		}else if("扬沙".equals(weatherText)){
+			return R.drawable.duststorm;
+		}else if("强沙尘暴".equals(weatherText)){
+			return R.drawable.duststorm;
+		}else if("霾".equals(weatherText)){
+			return R.drawable.haze;
+		}else if("99".equals(weatherText)){
+			return R.drawable.cloudy;
+		}
+		return R.drawable.cloudy;
 	}
 }
