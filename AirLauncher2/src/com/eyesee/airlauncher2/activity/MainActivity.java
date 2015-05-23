@@ -10,16 +10,19 @@ import com.eyesee.airlauncher2.view.ObservableHorizontalScrollView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 /**
  * 主页面
  * @author mark
@@ -45,6 +48,7 @@ public class MainActivity extends Activity implements Constants{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		pm = getPackageManager();
 		init();
 		/**
 		 * 设置滑动监听器
@@ -131,6 +135,13 @@ public class MainActivity extends Activity implements Constants{
 		ib_right.setOnClickListener(l);
 		ib_left.setOnClickListener(l);
 		ib_apps.setOnClickListener(l);
+		ib_nav.setOnClickListener(l);
+		ib_recorder.setOnClickListener(l);
+		ib_files.setOnClickListener(l);
+		ib_phone.setOnClickListener(l);
+		ib_music.setOnClickListener(l);
+		ib_set.setOnClickListener(l);
+		
 	}
 	
 	private ImageButton ib_nav;
@@ -141,6 +152,7 @@ public class MainActivity extends Activity implements Constants{
 	private ImageButton ib_apps;
 	private ImageButton ib_set;
 	private ImageView iv_weather;
+	private PackageManager pm;
 	/**
 	 * 初始化
 	 * 1.获取页面控件
@@ -209,9 +221,83 @@ public class MainActivity extends Activity implements Constants{
 				startActivity(intent);
 				//设置activity重新聚焦时的动画为渐入式
 				MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+				break;
+			
+			case R.id.ib_nav://点击导航
+				Intent intent_nav = pm.getLaunchIntentForPackage(NAV_PACKAGE_NAME);
+				if (intent_nav != null) {
+					startActivity(intent_nav);
+					//打开应用加入淡出效果
+					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
+				}else{
+					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+				}
+				break;
+				
+			case R.id.ib_recorder://点击记录仪
+				Intent intent_recorder = pm.getLaunchIntentForPackage(RECODER_PACKAGE_NAME);
+				if (intent_recorder != null) {
+					startActivity(intent_recorder);
+					//打开应用加入淡出效果
+					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
+				}else{
+					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+				}
+				break;
+				
+			case R.id.ib_music://点击音乐
+				Intent intent_music = pm.getLaunchIntentForPackage(MUSIC_PACKAGE_NAME);
+				if (intent_music != null) {
+					startActivity(intent_music);
+					//打开应用加入淡出效果
+					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
+				}else{
+					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+				}
+				break;
+				
+			case R.id.ib_phone://点击蓝牙拨号
+				Intent intent_btcall = pm.getLaunchIntentForPackage(BTCALL_PACKAGE_NAME);
+				if (intent_btcall != null) {
+					startActivity(intent_btcall);
+					//打开应用加入淡出效果
+					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
+				}else{
+					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+				}
+				break;
+			
+			case R.id.ib_files://点击文件管理
+				Intent intent_file = pm.getLaunchIntentForPackage(FILEMANAGER_PACKAGE_NAME);
+				if (intent_file != null) {
+					startActivity(intent_file);
+					//打开应用加入淡出效果
+					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
+				}else{
+					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+				}
+				break;
+				
+			case R.id.ib_set://点击设置
+				Intent intent_set = pm.getLaunchIntentForPackage(AIRSETTING_PACKAGE_NAME);
+				if (intent_set != null) {
+					startActivity(intent_set);
+					//打开应用加入淡出效果
+					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
+				}else{
+					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+				}
+				break;
 			}
 		}
 		
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }
