@@ -103,6 +103,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				Log.d("mark", "检查更新失败,网络访问错误");
+				tv_update_content.setText("检查更新失败,网络访问错误");
 			}
 
 			@Override

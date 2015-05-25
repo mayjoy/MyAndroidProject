@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.eyesee.airlauncher2.entity.WeatherInfo;
 import com.eyesee.airlauncher2.service.WeatherService;
 import com.eyesee.airlauncher2.utils.Constants;
 
@@ -23,10 +24,9 @@ import android.util.Log;
  */
 public class MainApplication extends Application implements Constants{
 	/**
-	 * 全局变量:当前地区
+	 * 全局变量:天气信息
 	 */
-	public String district;
-	private SharedPreferences sp;
+	public WeatherInfo weatherInfo = null;
 	/**
 	 * 城市数据库路径
 	 */
@@ -40,22 +40,8 @@ public class MainApplication extends Application implements Constants{
 	public void onCreate() {
 		super.onCreate();
 		initDb();
-		
-		initConfig();
-		
 		//启动天气服务
 		startService(new Intent(this,WeatherService.class));
-		
-	}
-	
-	/**
-	 * 初始化配置
-	 */
-	private void initConfig() {
-		//从sp中取出初始位置
-		sp = getSharedPreferences(LAUNCHER, MODE_PRIVATE);
-		district = sp.getString(DEF_DISTRICT, DEF_DISTRICT_VALUE);
-		//配置是否自动定位
 		
 	}
 	

@@ -3,6 +3,7 @@ package com.eyesee.airlauncher2.service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Application;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 
+import com.eyesee.airlauncher2.application.MainApplication;
 import com.eyesee.airlauncher2.dao.DbManager;
 import com.eyesee.airlauncher2.entity.WeatherInfo;
 import com.eyesee.airlauncher2.utils.Constants;
@@ -125,6 +127,8 @@ public class WeatherService extends Service implements Constants{
 		
 	}
 	
+	private MainApplication myApp;
+	
 	/**
 	 * 使用Volley方式访问网络
 	 * @param areaCode 城市编号
@@ -163,7 +167,8 @@ public class WeatherService extends Service implements Constants{
 							weatherInfo.weatherText = WeatherUtils.decodeWeatherId(fa);
 							weatherInfo.temp = fd+"℃~"+fc+"℃";
 						}
-						
+						myApp = (MainApplication) getApplication();
+						myApp.weatherInfo = weatherInfo;
 						//发送广播
 						Intent intent = new Intent();
 						intent.setAction(UPDATE_WEATHER);

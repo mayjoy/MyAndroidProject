@@ -1,7 +1,9 @@
 package com.eyesee.airlauncher2.activity;
 
 import com.eyesee.airlauncher2.R;
+import com.eyesee.airlauncher2.application.MainApplication;
 import com.eyesee.airlauncher2.entity.WeatherInfo;
+import com.eyesee.airlauncher2.utils.AppUtils;
 import com.eyesee.airlauncher2.utils.Constants;
 import com.eyesee.airlauncher2.utils.TimeUtils;
 import com.eyesee.airlauncher2.utils.WeatherUtils;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -84,10 +87,7 @@ public class MainActivity extends Activity implements Constants{
 					Bundle extras = intent.getExtras();
 					WeatherInfo weatherInfo = (WeatherInfo) extras.getSerializable("weatherInfo");
 					Log.d("mark", "收到天气更新的广播"+weatherInfo.toString());
-					tv_area.setText(weatherInfo.area);
-					tv_weather.setText(weatherInfo.weatherText);
-					tv_temperature.setText(weatherInfo.temp);
-					iv_weather.setImageResource(WeatherUtils.getWeatherImg(weatherInfo.weatherText));
+					setWeather(weatherInfo);
 				}
 			}
 		};
@@ -103,6 +103,7 @@ public class MainActivity extends Activity implements Constants{
 		tv_week.setText(TimeUtils.getWeekDay());
 	}
 	
+	public MainApplication myApp;
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -111,6 +112,12 @@ public class MainActivity extends Activity implements Constants{
 		
 		//设置时间日期信息
 		setTimeAndDate();
+		
+		//设置天气信息
+		myApp = (MainApplication) getApplication();
+		if(myApp.weatherInfo != null){
+			setWeather(myApp.weatherInfo);
+		}
 		
 		//注册时间改变的监听器
 		IntentFilter intentFilter = new IntentFilter();
@@ -141,7 +148,7 @@ public class MainActivity extends Activity implements Constants{
 		ib_phone.setOnClickListener(l);
 		ib_music.setOnClickListener(l);
 		ib_set.setOnClickListener(l);
-		
+		ib_voice.setOnClickListener(l);
 	}
 	
 	private ImageButton ib_nav;
@@ -151,6 +158,8 @@ public class MainActivity extends Activity implements Constants{
 	private ImageButton ib_music;
 	private ImageButton ib_apps;
 	private ImageButton ib_set;
+	private ImageButton ib_voice;
+	
 	private ImageView iv_weather;
 	private PackageManager pm;
 	/**
@@ -178,6 +187,8 @@ public class MainActivity extends Activity implements Constants{
 		ib_music = (ImageButton) findViewById(R.id.ib_music);
 		ib_apps = (ImageButton) findViewById(R.id.ib_apps);
 		ib_set = (ImageButton) findViewById(R.id.ib_set);
+		
+		ib_voice = (ImageButton) findViewById(R.id.ib_voice);
 		
 		ib_left.setVisibility(View.GONE);
 	}
@@ -230,7 +241,7 @@ public class MainActivity extends Activity implements Constants{
 					//打开应用加入淡出效果
 					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
 				}else{
-					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+					Toast.makeText(MainActivity.this, "程序未安装", Toast.LENGTH_SHORT).show();
 				}
 				break;
 				
@@ -241,7 +252,7 @@ public class MainActivity extends Activity implements Constants{
 					//打开应用加入淡出效果
 					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
 				}else{
-					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+					Toast.makeText(MainActivity.this, "程序未安装", Toast.LENGTH_SHORT).show();
 				}
 				break;
 				
@@ -252,7 +263,7 @@ public class MainActivity extends Activity implements Constants{
 					//打开应用加入淡出效果
 					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
 				}else{
-					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+					Toast.makeText(MainActivity.this, "程序未安装", Toast.LENGTH_SHORT).show();
 				}
 				break;
 				
@@ -263,7 +274,7 @@ public class MainActivity extends Activity implements Constants{
 					//打开应用加入淡出效果
 					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
 				}else{
-					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+					Toast.makeText(MainActivity.this, "程序未安装", Toast.LENGTH_SHORT).show();
 				}
 				break;
 			
@@ -274,7 +285,7 @@ public class MainActivity extends Activity implements Constants{
 					//打开应用加入淡出效果
 					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
 				}else{
-					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+					Toast.makeText(MainActivity.this, "程序未安装", Toast.LENGTH_SHORT).show();
 				}
 				break;
 				
@@ -285,19 +296,46 @@ public class MainActivity extends Activity implements Constants{
 					//打开应用加入淡出效果
 					MainActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out); 
 				}else{
-					Toast.makeText(MainActivity.this, "程序未安装", 0).show();
+					Toast.makeText(MainActivity.this, "程序未安装", Toast.LENGTH_SHORT).show();
 				}
+				break;
+				
+			case R.id.ib_voice://点击语音服务
+				Intent intent_ib_voice = new Intent();
+				//判断语音服务是否正在运行 com.aw.awvoiceassistant.AssistantService
+				if(!AppUtils.isServiceRunning(MainActivity.this, "com.aw.awvoiceassistant.AssistantService")){
+					intent_ib_voice.setAction("android.intent.action.START_AW_VOICE_ASSISTANT_SERVICE");
+					Toast.makeText(MainActivity.this, "语音服务开启", Toast.LENGTH_SHORT).show();
+					Log.d("mark", "语音服务开启");
+				}else{
+					intent_ib_voice.setAction("android.intent.action.STOP_AW_VOICE_ASSISTANT_SERVICE");
+					Toast.makeText(MainActivity.this, "语音服务关闭", Toast.LENGTH_SHORT).show();
+					Log.d("mark", "语音服务关闭");
+				}
+				sendBroadcast(intent_ib_voice);
 				break;
 			}
 		}
 		
 	}
 	
+	//屏蔽返回键
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	/**
+	 * 设置桌面天气信息
+	 * @param weatherInfo
+	 */
+	private void setWeather(WeatherInfo weatherInfo) {
+		tv_area.setText(weatherInfo.area);
+		tv_weather.setText(weatherInfo.weatherText);
+		tv_temperature.setText(weatherInfo.temp);
+		iv_weather.setImageResource(WeatherUtils.getWeatherImg(weatherInfo.weatherText));
 	}
 }
