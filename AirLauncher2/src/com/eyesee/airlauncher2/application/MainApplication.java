@@ -23,10 +23,7 @@ import android.util.Log;
  * @author mark
  */
 public class MainApplication extends Application implements Constants{
-	/**
-	 * 全局变量:天气信息
-	 */
-	public WeatherInfo weatherInfo = null;
+	
 	/**
 	 * 城市数据库路径
 	 */

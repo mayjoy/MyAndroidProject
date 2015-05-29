@@ -11,6 +11,7 @@ public interface Constants {
 	public static final String WEATHER_URL = "http://open.weather.com.cn/data/";
 	
 	public static final String UPDATE_WEATHER = "updateWeather";
+	public static final String GET_WEATHER_DONE = "getWeatherDone";
 	
 	public static final String AIRLAUNCHER_PACKAGE_NAME = "com.eyesee.airlauncher2";
 	public static final String MUSIC_PACKAGE_NAME = "com.kugou.android";//酷狗音乐

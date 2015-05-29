@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -92,6 +91,20 @@ public class MainActivity extends Activity implements Constants{
 			}
 		};
 		registerReceiver(weatherReceiver, filter);
+		
+		//注册时间改变的接收器
+				IntentFilter intentFilter = new IntentFilter();
+				intentFilter.addAction(Intent.ACTION_TIME_TICK);
+				timeReceiver = new BroadcastReceiver(){
+					@Override
+					public void onReceive(Context context, Intent intent) {
+						String action = intent.getAction();
+						if(Intent.ACTION_TIME_TICK.equals(action)){
+							setTimeAndDate();
+						}
+					}
+				};
+				registerReceiver(timeReceiver, intentFilter);
 	}
 
 	/**
@@ -110,28 +123,15 @@ public class MainActivity extends Activity implements Constants{
 		//设置activity重新聚焦时的动画为渐入式
 		this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 		
-		//设置时间日期信息
-		setTimeAndDate();
-		
-		//设置天气信息
-		myApp = (MainApplication) getApplication();
-		if(myApp.weatherInfo != null){
-			setWeather(myApp.weatherInfo);
-		}
-		
-		//注册时间改变的监听器
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(Intent.ACTION_TIME_TICK);
-		timeReceiver = new BroadcastReceiver(){
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-				if(Intent.ACTION_TIME_TICK.equals(action)){
-					setTimeAndDate();
-				}
-			}
-		};
-		registerReceiver(timeReceiver, intentFilter);
+	}
+
+	@Override
+	protected void onDestroy() {
+		//注销广播接收器
+		unregisterReceiver(timeReceiver);
+		unregisterReceiver(weatherReceiver);
+		// TODO Auto-generated method stub
+		super.onDestroy();
 	}
 
 	/**
@@ -318,6 +318,7 @@ public class MainActivity extends Activity implements Constants{
 		}
 		
 	}
+
 	
 	//屏蔽返回键
 	@Override
