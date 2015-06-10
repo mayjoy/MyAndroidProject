@@ -87,6 +87,7 @@ public class AllAppActivity extends Activity {
 				
 			}
 		};
+		
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("android.intent.action.PACKAGE_ADDED");
 		filter.addAction("android.intent.action.PACKAGE_REMOVED");

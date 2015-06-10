@@ -8,13 +8,13 @@
     >
     
 	<!-- 音乐控制栏 -->
-	<RelativeLayout 
+	<!-- <RelativeLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:background="@drawable/music_bg"
 	    android:layout_weight="0"
 	    >
-	    <!-- 循环模式 -->
+	    循环模式
 	    <ImageButton
 	        android:id="@+id/ib_switch_mode"
 	        android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
 	        android:background="@drawable/random_mode"
 	        android:layout_marginTop="10dp"
 	        />
-	    <!-- 音乐信息以及控制按钮 -->
+	    音乐信息以及控制按钮
 	    <LinearLayout 
 	        android:layout_width="350dp"
 	        android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
 	        android:layout_centerInParent="true"
 	        android:gravity="center_vertical"
 	        >
-	        <!-- 音乐文本 -->
+	        音乐文本
 	        <TextView
 	            android:id="@+id/tv_music" 
 	            android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
 	            android:textSize="@dimen/textsize_music"
 	            android:singleLine="true"
 	            />
-	        <!-- 控制按钮 -->
+	        控制按钮
 	        <LinearLayout 
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
 		            />
 	        </LinearLayout>
 	    </LinearLayout>
-	    <!-- 列表按钮 -->
+	    列表按钮
 	    <ImageButton
 	        android:id="@+id/ib_list"
 	        android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
 	        android:layout_marginTop="10dp"
 	        android:layout_alignParentRight="true"
 	        />
-	</RelativeLayout>
+	</RelativeLayout> -->
     <!-- 功能入口 -->
     <RelativeLayout 
         android:layout_width="match_parent"
