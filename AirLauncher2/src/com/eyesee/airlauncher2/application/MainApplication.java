@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.eyesee.airlauncher2.entity.WeatherInfo;
+import com.eyesee.airlauncher2.service.OrientatorService;
 import com.eyesee.airlauncher2.service.WeatherService;
 import com.eyesee.airlauncher2.utils.Constants;
 
@@ -37,9 +38,9 @@ public class MainApplication extends Application implements Constants{
 	public void onCreate() {
 		super.onCreate();
 		initDb();
+		startService(new Intent(this,OrientatorService.class));
 		//启动天气服务
 		startService(new Intent(this,WeatherService.class));
-		
 	}
 	
 	/**
